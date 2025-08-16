@@ -1,0 +1,33 @@
+name: Notify on Push or PR
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Send email notification
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com          # Replace with your SMTP server
+          server_port: 465                        # 587 for TLS, 465 for SSL
+          username: ${{ secrets.EMAIL_USERNAME }} # GitHub secret (your email address)
+          password: ${{ secrets.EMAIL_PASSWORD }} # GitHub secret (your app password)
+          subject: GitHub Repo Update
+          to: 2022pct0019@iitjammu.ac.in              # Receiver's email address
+          from: GitHub Actions shreyarathour824@gmail.com
+          body: |
+            🚀 GitHub event detected!
+
+            Repository: ${{ github.repository }}
+            Branch: ${{ github.ref }}
+            Event: ${{ github.event_name }}
+            Commit: ${{ github.sha }}
+            Actor: ${{ github.actor }}
+
+            View commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
